@@ -21,76 +21,74 @@ exR for Identifier :
 
 Include Rules :
 
-// catching keywords and increase the column
 
-<pre> ```{KEYWORD} {
+```{KEYWORD} {
     printf("KEYWORD(%s)\n", yytext);
     nb_column += yyleng;
-}``` <pre>
-
-// catching identifier entered by user which can includes - and _ in the middle
+}```
 
 
-<pre>```{IDF} {
+
+`{IDF} {
     if (yyleng > 14)
         printf("error lexical in the entity %s in the line %d and column %d - must be <= 14 chars\n",
                yytext, nb_line, nb_column);
     else
         printf("IDENTIFIER(%s)\n", yytext);
     nb_column += yyleng;
-}```<pre>
+}`
 
 catching real and integer
 
 
-<pre>```{REAL} {
+`{REAL} {
     printf("REAL(%s)\n", yytext);
     nb_column += yyleng;
-}```<pre>
+}`
 
 catching space and tab and increase column for better error locating
 
 
-<pre>```[ \t]+ {
+`[ \t]+ {
     nb_column += yyleng;
     /* this catches spaces and tab*/
-}```<pre>
+}`
 
-// catching new line for better error locating
+catching new line for better error locating
 
 
-<pre>```\n {
+`\n {
     nb_line++;
     nb_column = 1;
 
     // this handle new line
-}```<pre>
+}`
 
 
-// catching operations
+catching operations
 
 
-<pre>```(":="|";"|":"|","|"."|"("|")"|"+"|"-"|"*"|"/") {
+`(":="|";"|":"|","|"."|"("|")"|"+"|"-"|"*"|"/") {
     printf("SYMBOL(%s)\n", yytext);
     nb_column += yyleng;
-}```<pre>
+}`
 
-// catching comments starting with //
+catching comments starting with //
 
 
-<pre>```"//".* {
+`"//".* {
     printf("this is a comment\n");
     nb_column += yyleng;
-}```<pre>
+}`
 
 // catching any others character not handled by the rules above:
 
 
-<pre>```. {
+`. {
     printf("error lexical in the entity %s in the line %d and column %d\n", yytext, nb_line, nb_column);
     nb_column += yyleng;
     lexical_errors++;
-}```<pre>
+}`
 
 
 # run
