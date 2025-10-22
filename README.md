@@ -22,10 +22,10 @@ exR for Identifier :
 Include Rules :
 
 catching keywords and increase the column
-{KEYWORD} {
+/* {KEYWORD} {
     printf("KEYWORD(%s)\n", yytext);
     nb_column += yyleng;
-} 
+} */
 
 catching identifier entered by user which can includes - and _ in the middle
 {IDF} {
