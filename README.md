@@ -55,11 +55,11 @@ catching space and tab and increase column for better error locating
 catching new line for better error locating
 
 
-```lex \n {
+` \n {
     nb_line++;
     nb_column = 1;
 
-} ```
+} `
 
 
 catching operations
