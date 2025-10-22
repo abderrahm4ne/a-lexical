@@ -1,0 +1,12 @@
+Script ACAD_B;
+Vars
+// declare vars
+count, limit: Int;
+result: Real;
+
+Begin
+count := 7;
+limit := 20;
+result := limit / count + 2 * 3;
+write('done');
+Finish
