@@ -3,14 +3,14 @@
     #include <string.h>
     int nb_line = 1;     // line number
     int nb_column = 1;   // column number
-    int lexical_errors = 0;
+    int lexical_errors = 0; // erors number
 %}
 
 
 lettre [a-zA-Z]
 chiffre [0-9]
-IDF {lettre}* /* this handle identifer who contains _ or - in the middle */
-KEYWORD Script|Vars|Code|Begin|End|Finish|Int|Real|write
+IDF {lettre}+({lettre}|_|{chiffre})*({lettre}|{chiffre}) /* this handle identifer who contains _ in the middle */
+KEYWORD Script|Vars|Int|Real|Code|Begin|write|Finish
 INTEGER {chiffre}+
 REAL [+-]?{chiffre}+\.{chiffre}+
 
@@ -23,7 +23,7 @@ REAL [+-]?{chiffre}+\.{chiffre}+
 
 {IDF} {
     if (yyleng > 14)
-        printf("error lexical in the entity %s in the line %d and column %d - must be <= 14 chars\n",
+        printf("error lexical in the entity %s in the line %d and column %d must be less or equals to 14 chars\n",
                yytext, nb_line, nb_column);
     else
         printf("IDENTIFIER(%s)\n", yytext);
@@ -42,17 +42,17 @@ REAL [+-]?{chiffre}+\.{chiffre}+
 
 [ \t]+ {
     nb_column += yyleng;
-    /* this catches spaces and tab*/
+    /* this catches spaces and tabs*/
 }
 
 \n {
     nb_line++;
     nb_column = 1;
 
-    // this handle new line
+    // this catches new line
 }
 
-(":="|";"|":"|","|"."|"("|")"|"+"|"-"|"*"|"/") {
+":="|";"|":"|","|"."|"("|")"|"+"|"-"|"*"|"/" {
     printf("SYMBOL(%s)\n", yytext);
     nb_column += yyleng;
 }
