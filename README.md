@@ -58,7 +58,6 @@ catching new line for better error locating
 ` \n {
     nb_line++;
     nb_column = 1;
-
 } `
 
 

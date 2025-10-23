@@ -48,7 +48,6 @@ REAL [+-]?{chiffre}+\.{chiffre}+
 \n {
     nb_line++;
     nb_column = 1;
-
     // this catches new line
 }
 
