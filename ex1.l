@@ -9,7 +9,7 @@
 
 lettre [a-zA-Z]
 chiffre [0-9]
-IDF {lettre}+({lettre}|_|{chiffre})*({lettre}|{chiffre}) /* this handle identifer who contains _ in the middle */
+IDF {lettre}+({lettre}|_|{chiffre})*({lettre}|{chiffre})
 KEYWORD Script|Vars|Int|Real|Code|Begin|write|Finish
 INTEGER {chiffre}+
 REAL [+-]?{chiffre}+\.{chiffre}+
@@ -51,7 +51,7 @@ REAL [+-]?{chiffre}+\.{chiffre}+
     // this catches new line
 }
 
-":="|";"|":"|","|"."|"("|")"|"+"|"-"|"*"|"/" {
+":="|";"|":"|","|"."|"("|")"|"+"|"-"|"*"|"'"|"/" {
     printf("SYMBOL(%s)\n", yytext);
     nb_column += yyleng;
 }
