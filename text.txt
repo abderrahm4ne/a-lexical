@@ -1,0 +1,25 @@
+Script ACAD_B;
+Vars
+// declare vars
+count, limit, iii: Int;
+result: Real;
+Code
+Begin
+{
+// calcule simple
+count := 7;
+For i de 1 à 5 pas 1
+{
+    If (7 > 5){
+        write('this is correct');
+    }EndIf;
+}
+Do {
+    write('do while loop');
+} While (3 < 1);
+limit := 20;
+result := limit / count + 2 * 3;
+write('this is the result');
+// Resultat final dans 'result'
+}
+Finish
