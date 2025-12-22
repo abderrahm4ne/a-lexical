@@ -2,16 +2,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "TS.h"
 
 extern int nb_line;
 extern int nb_column;
 int yylex();
 int yyerror(const char *s);
+char SauvType[20];
 %}
+
+%union{
+      int integer;
+      char *str;
+      float real;
+}
+%start program
+%right MARK
+
 
 %token SCRIPT VARS INT REAL CODE BEGIN_T WRITE FINISH
 %token AFF PVG DP VG PO PF PLUS MINUS MUL DIV AO AF
-%token IDF INTEGER REALNUM STRING
+%token <str> IDF <integer> INTEGER <real> REALNUM <str> STRING
 %token IF ELSE ENDIF AND OR FOR DE A PAS WHILE DO
 %token GRT SML GOE SOE EQL NEL MARK
 
@@ -37,12 +48,18 @@ vardecl:
 ;
 
 identlist:
-      IDF                     
-    | IDF VG identlist        
+      IDF      {
+            if(recherche($1)==-1) {inserer($1,SauvType);}
+            else printf("Erreur Semantique: double declation de %s, a la ligne %d\n", $1, nb_line); 
+            }          
+    | IDF VG identlist    {
+            if(recherche($1)==-1) {inserer($1,SauvType);}
+            else printf("Erreur Semantique: double declation de %s, a la ligne %d\n", $1, nb_line); 
+            }
 ;
 
 type:
-      INT | REAL
+      INT {strcpy(SauvType,"INT");} | REAL {strcpy(SauvType,"REAL");}
 ;
 
 code:
@@ -86,7 +103,8 @@ loop:
     | doWhileLoop
 
 forLoop: 
-      FOR IDF DE INTEGER A INTEGER PAS INTEGER AO statements AF
+      FOR IDF DE INTEGER A INTEGER PAS INTEGER AO statements AF IDF { /* Vérification de la declaration */ if (recherche($2)== -1) printf("Erreur semantique: %s non declare a la ligne %d\n",$2,nb_line);
+      }
 ;
 
 doWhileLoop:
@@ -94,11 +112,15 @@ doWhileLoop:
 ;
 
 ex: 
-      IDF | REALNUM | INTEGER
+      IDF { /* Vérification de la declaration */ if (recherche($1)==-1) printf("Erreur semantique: %s non declare a la ligne %d\n",$1,nb_line);
+      }  
+      | REALNUM | INTEGER
 ;
 
 assignment:
-      IDF AFF expression      
+      IDF AFF expression { /* Vérification de la declaration */
+                              if (recherche($1)==-1) printf("Erreur semantique: %s non declare a la ligne%d\n",$1,nb_line);
+                         }     
 ;
 
 writestmt:
@@ -112,13 +134,15 @@ expression:
 ;
 
 term:
-      term MUL factor
-    | term DIV factor
+      term DIV INTEGER  { if ($3==0) printf("Erreur semantique: Division par zero a la ligne %d\n",nb_line); }
+    | term DIV IDF
+    | term MUL factor
     | factor
 ;
 
 factor:
-      IDF
+      IDF { /* Vérification de la declaration */ if (recherche($1)==-1) printf("Erreur semantique: %s non declare a la ligne%d\n",$1,nb_line);
+          }
     | INTEGER
     | REALNUM
     | PO expression PF
@@ -128,6 +152,7 @@ factor:
 
 int main(void) {
     yyparse();
+    afficher();
     return 0;
 }
 

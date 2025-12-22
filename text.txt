@@ -1,7 +1,10 @@
 Script ACAD_B;
 Vars
 // declare vars
-count, limit, iii: Int;
+
+count, limit, i: Int;
+count, limit, i: Int;
+result: Real;
 result: Real;
 Code
 Begin

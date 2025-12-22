@@ -12,3 +12,6 @@ gcc lex.yy.c syntax.tab.c -o compiler
 ```sh
 ./compiler < text.txt
 ```
+
+
+## SEMANTIQUE  : 

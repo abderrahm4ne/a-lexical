@@ -2,7 +2,7 @@
     #include <stdio.h>
     #include <string.h>
     #include "syntax.tab.h"
-    
+    extern YYSTYPE yylval;
     int nb_line = 1;
     int nb_column = 1;
     int lexical_errors = 0;
@@ -10,7 +10,7 @@
 
 lettre [a-zA-Z]
 chiffre [0-9]
-IDF {lettre}({lettre}|_|{chiffre})*
+IDF {lettre}(({lettre}|{chiffre}|_|-)*({lettre}|{chiffre}))?
 KEYWORD (Script|Vars|Int|Real|Code|Begin|write|Finish|If|Else|EndIf|AND|OR|For|de|à|pas|Do|While)
 INTEGER {chiffre}+
 REAL [+-]?{chiffre}+\.{chiffre}+
@@ -46,12 +46,14 @@ REAL [+-]?{chiffre}+\.{chiffre}+
         lexical_errors++;
     } else {
         nb_column += yyleng;
+        yylval.str = strdup(yytext);
+        inserer(yytext, "IDF");
         return IDF;
     }
 }
 
-{INTEGER}   { nb_column += yyleng; return INTEGER; }
-{REAL}      { nb_column += yyleng; return REALNUM; }
+{INTEGER}   { nb_column += yyleng; yylval.integer = atoi(yytext); return INTEGER; }
+{REAL}      { nb_column += yyleng; yylval.real = atof(yytext); return REALNUM; }
 
 \r          { nb_column++; }  
 [ \t\r]+      { nb_column += yyleng; }
